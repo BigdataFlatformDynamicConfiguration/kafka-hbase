@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 import threading, logging, time
 import multiprocessing
+import sys
 
 from kafka import KafkaConsumer, KafkaProducer
 import happybase
 
 
 class Producer(threading.Thread):
-    def __init__(self):
+    def __init__(self, kafkaHost):
         threading.Thread.__init__(self)
         self.stop_event = threading.Event()
         
@@ -15,7 +16,7 @@ class Producer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-        producer = KafkaProducer(bootstrap_servers='localhost:9092')
+        producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
 
         while not self.stop_event.is_set():
             producer.send('my-topic1', b"<<<<<<<<< my-topic test")
@@ -26,7 +27,7 @@ class Producer(threading.Thread):
 
 
 class Consumer(multiprocessing.Process):
-    def __init__(self):
+    def __init__(self, kafkaHost, hbaseHost):
         multiprocessing.Process.__init__(self)
         self.stop_event = multiprocessing.Event()
         
@@ -34,12 +35,12 @@ class Consumer(multiprocessing.Process):
         self.stop_event.set()
         
     def run(self):
-        consumer = KafkaConsumer(bootstrap_servers='localhost:9092',
+        consumer = KafkaConsumer(bootstrap_servers= kafkaHost + ':9092',
                                  auto_offset_reset='earliest',
                                  consumer_timeout_ms=1000)
         consumer.subscribe(['my-topic1'])
 
-        connection = happybase.Connection(host='localhost', port=9090)
+        connection = happybase.Connection(host=hbaseHost, port=9090)
         connection.open()
 
         table = connection.table('my-topic11')
@@ -57,11 +58,11 @@ class Consumer(multiprocessing.Process):
         consumer.close()
         
         
-def main():
+def main(kafkaHost, hbaseHost):
 
     tasks = [
-        Producer(),
-        Consumer()
+        Producer(kafkaHost),
+        Consumer(kafkaHost, hbaseHost)
     ]
 
     for t in tasks:
@@ -81,4 +82,6 @@ if __name__ == "__main__":
         format='%(asctime)s.%(msecs)s:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
         level=logging.INFO
         )
-    main()
+    kafkaHost = sys.argv[1]
+    hbaseHost = sys.argv[2]
+    main(kafkaHost, hbaseHost)
