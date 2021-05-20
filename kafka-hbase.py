@@ -66,6 +66,7 @@ def main(kafkaHost, hbaseHost):
     ]
 
     for t in tasks:
+        t.daemon = True
         t.start()
 
     time.sleep(3)
