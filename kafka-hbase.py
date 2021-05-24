@@ -39,6 +39,7 @@ class Consumer(multiprocessing.Process):
         consumer = KafkaConsumer(bootstrap_servers= kafkaHost + ':9092',
                                  auto_offset_reset='earliest',
                                  consumer_timeout_ms=1000)
+        print("consumer: " + consumer)
         consumer.subscribe(['my-topic1'])
         print("consumer: " + consumer)
         f.write("consumer: " + consumer + "\n")
