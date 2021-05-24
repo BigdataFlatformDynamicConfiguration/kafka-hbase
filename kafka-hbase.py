@@ -29,8 +29,11 @@ class Producer(threading.Thread):
 
 class Consumer(multiprocessing.Process):
     def __init__(self, kafkaHost, hbaseHost):
+        print("consumer")
         multiprocessing.Process.__init__(self)
+        print("consumer")
         self.stop_event = multiprocessing.Event()
+        print("consumer")
         
     def stop(self):
         self.stop_event.set()
