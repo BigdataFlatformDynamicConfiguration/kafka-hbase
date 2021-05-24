@@ -35,24 +35,29 @@ class Consumer(multiprocessing.Process):
         self.stop_event.set()
         
     def run(self):
+        f=open("log","w")
         consumer = KafkaConsumer(bootstrap_servers= kafkaHost + ':9092',
                                  auto_offset_reset='earliest',
                                  consumer_timeout_ms=1000)
         consumer.subscribe(['my-topic1'])
         print("consumer: " + consumer)
+        f.write("consumer: " + consumer + "\n")
 
         connection = happybase.Connection(host=hbaseHost, port=9090)
         connection.open()
         print("connection: " + connection)
+        f.write("connection: " + connection + "\n")
 
         table = connection.table('my-topic11')
         print("table: " + table)
+        f.write("table: " + table + "\n")
         
         count = 0
         while not self.stop_event.is_set():
             for message in consumer:
                 count += 1
                 print("message: " + message.value)
+                f.write("message: " + message.value + "\n")
                 
                 table.put('row-key' + str(count), {'cf:col1': message.value})
                 if self.stop_event.is_set():
@@ -60,7 +65,8 @@ class Consumer(multiprocessing.Process):
 
         for key, data in table.scan():
             print(key, data)
-
+            
+        f.close()
         consumer.close()
         
         
