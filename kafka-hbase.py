@@ -39,15 +39,21 @@ class Consumer(multiprocessing.Process):
                                  auto_offset_reset='earliest',
                                  consumer_timeout_ms=1000)
         consumer.subscribe(['my-topic1'])
+        print("consumer: " + consumer)
 
         connection = happybase.Connection(host=hbaseHost, port=9090)
         connection.open()
+        print("connection: " + connection)
 
         table = connection.table('my-topic11')
+        print("table: " + table)
+        
         count = 0
         while not self.stop_event.is_set():
             for message in consumer:
                 count += 1
+                print("message: " + message.value)
+                
                 table.put('row-key' + str(count), {'cf:col1': message.value})
                 if self.stop_event.is_set():
                     break
