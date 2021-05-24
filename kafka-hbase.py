@@ -114,7 +114,7 @@ def main(kafkaHost, hbaseHost):
         t.daemon = True
         t.start()
 
-    time.sleep(3)
+    time.sleep(5)
     
     for task in tasks:
         task.stop()
