@@ -29,20 +29,17 @@ class Producer(threading.Thread):
 
 class Consumer(multiprocessing.Process):
     def __init__(self, kafkaHost, hbaseHost):
-        print("consumer")
         multiprocessing.Process.__init__(self)
-        print("consumer")
         self.stop_event = multiprocessing.Event()
-        print("consumer")
         
     def stop(self):
         self.stop_event.set()
         
     def run(self):
         f=open("log","w")
-        consumer = KafkaConsumer(bootstrap_servers= kafkaHost + ':9092',
-                                 auto_offset_reset='earliest',
-                                 consumer_timeout_ms=1000)
+        consumer = KafkaConsumer(bootstrap_servers= kafkaHost + ':9092')#,
+#                                  auto_offset_reset='earliest',
+#                                  consumer_timeout_ms=1000)
         print("consumer: " + consumer)
         consumer.subscribe(['my-topic1'])
         print("consumer: " + consumer)
