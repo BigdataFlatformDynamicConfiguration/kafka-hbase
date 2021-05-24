@@ -17,6 +17,7 @@ class Producer(threading.Thread):
 
     def run(self):
         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
+        print("producer: " + producer)
 
         while not self.stop_event.is_set():
             producer.send('my-topic1', b"<<<<<<<<< my-topic test")
