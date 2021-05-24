@@ -38,7 +38,7 @@ class Consumer(multiprocessing.Process):
     def run(self):
         f=open("log","w")
         consumer = KafkaConsumer('my-topic1',
-                         bootstrap_servers=[ kafkaHost+':9092'])
+                         bootstrap_servers= kafkaHost+':9092')
         print("consumer: " + consumer)
         f.write("consumer: " + consumer + "\n")
 
