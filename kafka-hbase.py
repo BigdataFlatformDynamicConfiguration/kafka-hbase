@@ -62,7 +62,7 @@ def main(kafkaHost, hbaseHost):
 
     tasks = [
         Producer(kafkaHost),
-        Consumer(kafkaHost, hbaseHost)
+        #Consumer(kafkaHost, hbaseHost)
     ]
 
     for t in tasks:
