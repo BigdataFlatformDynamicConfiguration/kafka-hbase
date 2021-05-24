@@ -27,45 +27,65 @@ class Producer(threading.Thread):
         producer.close()
 
 
-class Consumer(multiprocessing.Process):
+# class Consumer(multiprocessing.Process):
+#     def __init__(self, kafkaHost, hbaseHost):
+#         multiprocessing.Process.__init__(self)
+#         self.stop_event = multiprocessing.Event()
+        
+#     def stop(self):
+#         self.stop_event.set()
+        
+#     def run(self):
+#         f=open("log","w")
+#         consumer = KafkaConsumer('my-topic1',
+#                          bootstrap_servers= kafkaHost+':9092')
+#         print("consumer: " + consumer)
+#         f.write("consumer: " + consumer + "\n")
+
+#         connection = happybase.Connection(host=hbaseHost, port=9090)
+#         connection.open()
+#         print("connection: " + connection)
+#         f.write("connection: " + connection + "\n")
+
+#         table = connection.table('my-topic11')
+#         print("table: " + table)
+#         f.write("table: " + table + "\n")
+        
+#         count = 0
+#         while not self.stop_event.is_set():
+#             for message in consumer:
+#                 count += 1
+#                 print("message: " + message.value)
+#                 f.write("message: " + message.value + "\n")
+                
+#                 table.put('row-key' + str(count), {'cf:col1': message.value})
+#                 if self.stop_event.is_set():
+#                     break
+
+#         for key, data in table.scan():
+#             print(key, data)
+            
+#         f.close()
+#         consumer.close()
+
+class Consumer(threading.Thread):
     def __init__(self, kafkaHost, hbaseHost):
-        multiprocessing.Process.__init__(self)
-        self.stop_event = multiprocessing.Event()
+        threading.Thread.__init__(self)
+        self.stop_event = threading.Event()
         
     def stop(self):
         self.stop_event.set()
-        
+
     def run(self):
-        f=open("log","w")
-        consumer = KafkaConsumer('my-topic1',
-                         bootstrap_servers= kafkaHost+':9092')
-        print("consumer: " + consumer)
-        f.write("consumer: " + consumer + "\n")
-
-        connection = happybase.Connection(host=hbaseHost, port=9090)
-        connection.open()
-        print("connection: " + connection)
-        f.write("connection: " + connection + "\n")
-
-        table = connection.table('my-topic11')
-        print("table: " + table)
-        f.write("table: " + table + "\n")
-        
-        count = 0
-        while not self.stop_event.is_set():
-            for message in consumer:
-                count += 1
-                print("message: " + message.value)
-                f.write("message: " + message.value + "\n")
-                
-                table.put('row-key' + str(count), {'cf:col1': message.value})
-                if self.stop_event.is_set():
-                    break
-
-        for key, data in table.scan():
-            print(key, data)
-            
-        f.close()
+        consumer = KafkaConsumer('my-topic',
+                         bootstrap_servers=[ kafkaHost + ':9092'])
+        print("consumer: "+consumer)
+        for message in consumer:
+            # message value and key are raw bytes -- decode if necessary!
+            # e.g., for unicode: `message.value.decode('utf-8')`
+            print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                                  message.offset, message.key,
+                                                  message.value))
         consumer.close()
         
         
