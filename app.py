@@ -17,4 +17,4 @@ def index():
 
 if __name__ == '__main__':
     listen_port = '2000'
-    app.run(debug=True, port=int(listen_port), host='34.64.100.75')
+    app.run(debug=True, port=int(listen_port), host='0.0.0.0')
