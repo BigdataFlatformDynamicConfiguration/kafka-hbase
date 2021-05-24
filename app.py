@@ -16,4 +16,5 @@ def index():
 #     app.run(debug=True,host=ipaddr,port=int(listen_port),threaded=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    listen_port = '2000'
+    app.run(debug=True, port=int(listen_port))
