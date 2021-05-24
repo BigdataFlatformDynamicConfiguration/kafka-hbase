@@ -77,9 +77,9 @@ class Consumer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-        consumer = KafkaConsumer('my-topic',
+        consumer = KafkaConsumer('my-topic1',
                          bootstrap_servers=[ kafkaHost + ':9092'])
-        print("consumer: "+consumer)
+        print("consumer: "+ str(consumer))
         for message in consumer:
             # message value and key are raw bytes -- decode if necessary!
             # e.g., for unicode: `message.value.decode('utf-8')`
