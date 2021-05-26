@@ -5,7 +5,7 @@ import sys
 from waitress import serve
 
 app = Flask(__name__)
-temp_port = 2000
+temp_port = 2001
 
 @app.route('/', methods=['GET'])
 def index():
@@ -16,7 +16,7 @@ def create_table():
     global connection
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
-    #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
+    #http://ip:2001/create-table?table_name=테이블 이름&column_family_name=cf1
     if 'table_name' in table_name:
         table_name = data['table_name']
     else :
@@ -49,7 +49,7 @@ def delete_table():
     global connection
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
-    #http://ip:2000/delete-table?table_name=테이블 이름
+    #http://ip:2001/delete-table?table_name=테이블 이름
     
     print('Deleting the {} table.'.format(table_name))
     connection.delete_table(table_name)
@@ -63,7 +63,7 @@ def row_list():
 
 # if __name__ == '__main__':
 
-#     listen_port = '2000'
+#     listen_port = '2001'
 
 #     ipaddr=subprocess.getoutput("hostname -I").split()[0]
 #     print ("Starting the service with ip_addr="+ipaddr)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     connection.open()
    
     serve(app, host="0.0.0.0", port=temp_port)
-#     listen_port = '2000'
+#     listen_port = '2001'
 #     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
     
     #command ex) python app.py test-hbase-master
