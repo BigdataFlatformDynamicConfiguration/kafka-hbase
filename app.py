@@ -38,6 +38,8 @@ def create_table():
 @app.route('/table-list', methods=['GET'])
 def table_list():
     global connection
+    
+    print(connection)
     table_list = connection.tables()
     print(table_list)
     
