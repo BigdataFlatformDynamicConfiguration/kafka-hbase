@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request, render_template
 import subprocess
 import happybase
 import sys
-from waitress import serve
 
 app = Flask(__name__)
 
@@ -81,7 +80,6 @@ if __name__ == '__main__':
     connection.open()
     print(connection)
    
-#     serve(app, host="0.0.0.0", port=2000)
     listen_port = '2000'
     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
     
