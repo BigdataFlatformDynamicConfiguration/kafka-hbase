@@ -2,9 +2,59 @@ from flask import Flask, jsonify, request, render_template
 import subprocess
 
 app = Flask(__name__)
+# hbase 연결
+connection = happybase.Connection(host=hbaseHost, port=9090)
+connection.open()
 
 @app.route('/', methods=['GET'])
 def index():
+    return "hello wolrd!"
+
+@app.route('/create-table', methods=['GET'])
+def create_table():
+    # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
+    data = request.args.to_dict()
+    #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
+    if 'table_name' in table_name:
+        table_name = data['table_name']
+    else :
+        return "There is no table name(table_name)."
+    
+    if 'column_family_name' in data:
+        column_family_name = data['column_family_name']
+    else:
+        column_family_name = 'cf1'
+        
+    print('Creating the {} table.'.format(table_name))
+
+    connection.create_table(
+    table_name,
+    {
+        column_family_name: dict()  # Use default options.
+    })
+    return 'Creating the {} table.'.format(table_name)
+
+@app.route('/table-list', methods=['GET'])
+def table_list():
+    table_list = connection.tables()
+    print(table_list)
+    
+    return str(table_list)
+
+@app.route('/delete-table', methods=['GET'])
+def delete_table():
+    # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
+    data = request.args.to_dict()
+    #http://ip:2000/delete-table?table_name=테이블 이름
+    
+    print('Deleting the {} table.'.format(table_name))
+    connection.delete_table(table_name)
+    
+    return 'Deleting the {} table.'.format(table_name)
+
+@app.route('/row-list', methods=['GET'])
+def row_list():
+    
     return "hello wolrd!"
 
 # if __name__ == '__main__':
