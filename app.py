@@ -76,8 +76,8 @@ if __name__ == '__main__':
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
    
-    serve(app, host="0.0.0.0", port=2000)
-#     listen_port = '2000'
-#     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
+#     serve(app, host="0.0.0.0", port=2000)
+    listen_port = '2000'
+    app.run(debug=True, port=int(listen_port), host='0.0.0.0')
     
     #command ex) python app.py test-hbase-master
