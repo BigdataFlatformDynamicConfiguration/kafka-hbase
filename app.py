@@ -68,7 +68,7 @@ def delete_table():
     print(table_name)
     print(table_name_encode)
     if table_name_encode in table_list:
-        connection.delete_table(table_name)    
+        connection.delete_table(table_name, disable=True)    
         print('Deleting the {} table.'.format(table_name))
         return 'Deleting the {} table.'.format(table_name)
     else:
