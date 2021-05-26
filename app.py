@@ -1,11 +1,9 @@
 from flask import Flask, jsonify, request, render_template
 import subprocess
 import happybase
+import sys
 
 app = Flask(__name__)
-# hbase 연결
-connection = happybase.Connection(host=hbaseHost, port=9090)
-connection.open()
 
 @app.route('/', methods=['GET'])
 def index():
@@ -13,6 +11,7 @@ def index():
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
+    global connection
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
     #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
@@ -37,6 +36,7 @@ def create_table():
 
 @app.route('/table-list', methods=['GET'])
 def table_list():
+    global connection
     table_list = connection.tables()
     print(table_list)
     
@@ -44,6 +44,7 @@ def table_list():
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
+    global connection
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
     #http://ip:2000/delete-table?table_name=테이블 이름
@@ -67,5 +68,13 @@ def row_list():
 #     app.run(debug=True,host=ipaddr,port=int(listen_port),threaded=True)
 
 if __name__ == '__main__':
+    # hbase 연결
+    global connection
+    hbaseHost = sys.argv[1]
+    
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
     listen_port = '2000'
     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
+    
+    #command ex) python app.py test-hbase-master
