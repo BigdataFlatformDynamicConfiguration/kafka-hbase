@@ -6,6 +6,8 @@ from waitress import serve
 
 app = Flask(__name__)
 
+hbaseHost = sys.argv[1]
+
 @app.route('/', methods=['GET'])
 def index():
     return "hello wolrd!"
@@ -37,7 +39,8 @@ def create_table():
 
 @app.route('/table-list', methods=['GET'])
 def table_list():
-    global connection
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
     
     print(connection)
     table_list = connection.tables()
@@ -73,7 +76,6 @@ def row_list():
 if __name__ == '__main__':
     # hbase 연결
     global connection
-    hbaseHost = sys.argv[1]
     
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
