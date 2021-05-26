@@ -55,11 +55,22 @@ def delete_table():
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
     #http://ip:2000/delete-table?table_name=테이블 이름
+    if 'table_name' in data:
+        table_name = data['table_name']
+    else :
+        return "There is no table name(table_name)."
     
-    print('Deleting the {} table.'.format(table_name))
-    connection.delete_table(table_name)
+    table_list = connection.tables()
+    print(table_list)
+    print(table_name)
     
-    return 'Deleting the {} table.'.format(table_name)
+    if table_name in table_list:
+        connection.delete_table(table_name)    
+        print('Deleting the {} table.'.format(table_name))
+        return 'Deleting the {} table.'.format(table_name)
+    else:
+        return 'There is no table name corresponding to hbase.'
+    return 'delete table'
 
 @app.route('/row-list', methods=['GET'])
 def row_list():
