@@ -61,12 +61,9 @@ def delete_table():
         return "There is no table name(table_name)."
     
     table_list = connection.tables()
-    print(table_list)
-    print(table_name)
     
     table_name_encode = table_name.encode()
-    print(table_name)
-    print(table_name_encode)
+
     if table_name_encode in table_list:
         connection.delete_table(table_name, disable=True)    
         print('Deleting the {} table.'.format(table_name))
