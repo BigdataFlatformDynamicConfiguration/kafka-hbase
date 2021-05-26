@@ -13,7 +13,8 @@ def index():
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
-    global connection
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
     #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
@@ -49,7 +50,8 @@ def table_list():
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
-    global connection
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
     #http://ip:2000/delete-table?table_name=테이블 이름
@@ -74,12 +76,6 @@ def row_list():
 
 if __name__ == '__main__':
     # hbase 연결
-    global connection
-    
-    connection = happybase.Connection(host=hbaseHost, port=9090)
-    connection.open()
-    print(connection)
-   
     listen_port = '2000'
     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
     
