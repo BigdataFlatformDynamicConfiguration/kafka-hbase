@@ -18,7 +18,7 @@ def create_table():
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
     #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
-    if 'table_name' in table_name:
+    if 'table_name' in data:
         table_name = data['table_name']
     else :
         return "There is no table name(table_name)."
