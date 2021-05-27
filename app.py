@@ -8,7 +8,8 @@ import json
 
 app = Flask(__name__)
 
-hbaseHost = sys.argv[1]
+kafkaHost = sys.argv[1]
+hbaseHost = sys.argv[2]
 
 @app.route('/', methods=['GET'])
 def index():
