@@ -9,22 +9,20 @@ hbaseHost = sys.argv[1]
 
 # 추가 작업 영역 --------------
 
-
-
-# ------------ 추가작업 영역 끝
-
-
-@app.route('/', methods=['GET'])
-def index():
-    return "hello wolrd!"
-
-@app.route('/create-table', methods=['GET'])
+@app.route('/table/families', methods=['POST'])
+def tableFamilies():
+    body = request.get_json()
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
+    table = connection.
+    
+@app.route('/create-table', methods=['POST'])
 def create_table():
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
-    data = request.args.to_dict()
-    #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
+    data = request.get_json()
+    #http://ip:2000/create-table
     if 'table_name' in data:
         table_name = data['table_name']
     else :
@@ -37,12 +35,15 @@ def create_table():
         
     print('Creating the {} table.'.format(table_name))
 
-    connection.create_table(
-    table_name,
-    {
-        column_family_name: dict()  # Use default options.
-    })
+    connection.create_table(table_name,column_family_name)
     return 'Creating the {} table.'.format(table_name)
+
+# ------------ 추가작업 영역 끝
+
+
+@app.route('/', methods=['GET'])
+def index():
+    return "hello wolrd!"
 
 @app.route('/table-list', methods=['GET'])
 def table_list():
