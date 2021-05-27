@@ -11,6 +11,61 @@ app = Flask(__name__)
 kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
 
+class Producer(threading.Thread):
+    def __init__(self, kafkaHost):
+        threading.Thread.__init__(self)
+        self.stop_event = threading.Event()
+        
+    def stop(self):
+        self.stop_event.set()
+
+    def run(self):
+        producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
+                     value_serializer=lambda m: json.dumps(m).encode('ascii'))
+        producer.send('my-topic1', data)
+        producer.close()
+ 
+class Consumer(threading.Thread):
+    def __init__(self, kafkaHost, hbaseHost):
+        threading.Thread.__init__(self)
+        self.stop_event = threading.Event()
+        
+    def stop(self):
+        self.stop_event.set()
+
+    def run(self):
+        consumer = KafkaConsumer('my-topic1',
+                     bootstrap_servers=[ kafkaHost + ':9092'],
+                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
+        while not self.stop_event.is_set():
+            for message in consumer:
+                # message value and key are raw bytes -- decode if necessary!
+                # e.g., for unicode: `message.value.decode('utf-8')`
+                print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                          message.offset, message.key,
+                                          message.value))
+        
+#         connection = happybase.Connection(host=hbaseHost, port=9090)
+#         connection.open()
+
+#         table = connection.table('my-topic11')
+        
+#         count = 0
+#         while not self.stop_event.is_set():
+#             for message in consumer:
+#                 count += 1
+#                 print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+#                                                   message.offset, message.key,
+#                                                   message.value))
+#                 table.put('row-key' + str(count), {'cf:col1': message.value})
+#                 if self.stop_event.is_set():
+#                     break
+
+#         for key, data in table.scan():
+#             print(key, data)
+            
+        consumer.close()        
+
 @app.route('/', methods=['GET'])
 def index():
     return "hello wolrd!"
@@ -82,25 +137,22 @@ def row_list():
     data = request.form.to_dict()
     print(data)
     
-    consumer = KafkaConsumer('my-topic1',
-                     bootstrap_servers=[ kafkaHost + ':9092'],
-                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
-    
-    producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
-                     value_serializer=lambda m: json.dumps(m).encode('ascii'))
-    
-    producer.send('my-topic1', data)
-    
-    for message in consumer:
-        # message value and key are raw bytes -- decode if necessary!
-        # e.g., for unicode: `message.value.decode('utf-8')`
-        print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-                                          message.offset, message.key,
-                                          message.value)) 
-        break
+    tasks = [
+        Consumer(kafkaHost, hbaseHost),
+        Producer(kafkaHost)
+    ]
+
+    for t in tasks:
+        t.daemon = True
+        t.start()
         
-    consumer.close()
-    producer.close()
+    time.sleep(2)
+    
+    for task in tasks:
+        task.stop()
+
+    for task in tasks:
+        task.join()
     
     return "hello wolrd!"
 
