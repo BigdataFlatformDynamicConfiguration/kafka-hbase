@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
+import threading, logging, time
 import subprocess
 import happybase
 import sys
