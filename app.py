@@ -14,6 +14,7 @@ hbaseHost = sys.argv[2]
 
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
+        self.data = data
         threading.Thread.__init__(self)
         self.stop_event = threading.Event()
         
@@ -23,7 +24,7 @@ class Producer(threading.Thread):
     def run(self):
         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
                      value_serializer=lambda m: json.dumps(m).encode('ascii'))
-        producer.send('my-topic1', data)
+        producer.send('my-topic1', self.data)
         producer.close()
  
 class Consumer(threading.Thread):
