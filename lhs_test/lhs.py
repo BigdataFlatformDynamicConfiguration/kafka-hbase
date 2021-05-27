@@ -9,12 +9,12 @@ hbaseHost = sys.argv[1]
 
 # 추가 작업 영역 --------------
 
-@app.route('/table/families', methods=['POST'])
-def tableFamilies():
-    body = request.get_json()
-    connection = happybase.Connection(host=hbaseHost, port=9090)
-    connection.open()
-    table = connection.
+# @app.route('/table/families', methods=['POST'])
+# def tableFamilies():
+#     body = request.get_json()
+#     connection = happybase.Connection(host=hbaseHost, port=9090)
+#     connection.open()
+#     table = connection.
     
 @app.route('/create-table', methods=['POST'])
 def create_table():
