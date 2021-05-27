@@ -13,7 +13,7 @@ kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
 
 class Producer(threading.Thread):
-    def __init__(self, kafkaHost):
+    def __init__(self, kafkaHost, data):
         threading.Thread.__init__(self)
         self.stop_event = threading.Event()
         
@@ -140,7 +140,7 @@ def row_list():
     
     tasks = [
         Consumer(kafkaHost, hbaseHost),
-        Producer(kafkaHost)
+        Producer(kafkaHost, data)
     ]
 
     for t in tasks:
