@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request, render_template
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
 import subprocess
 import happybase
 import sys
+import json
 
 app = Flask(__name__)
 
@@ -72,8 +75,28 @@ def delete_table():
         return 'There is no table name corresponding to hbase.'
     return 'delete table'
 
-@app.route('/row-list', methods=['GET'])
+@app.route('/row-list', methods=['POST'])
 def row_list():
+    # post 로 전달 받은 json 정보를 python dict 형태로 data 에 저장
+    data = request.get_json()
+    
+    consumer = KafkaConsumer('my-topic1',
+                     bootstrap_servers=[ kafkaHost + ':9092'],
+                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
+    
+    producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
+                     value_serializer=lambda m: json.dumps(m).encode('ascii'))
+    
+    producer.send('my-topic1', data)
+    
+    for message in consumer:
+        # message value and key are raw bytes -- decode if necessary!
+        # e.g., for unicode: `message.value.decode('utf-8')`
+        print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                          message.offset, message.key,
+                                          message.value)) 
+    consumer.close()
+    producer.close()
     
     return "hello wolrd!"
 
