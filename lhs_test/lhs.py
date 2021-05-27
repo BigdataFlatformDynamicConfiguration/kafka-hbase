@@ -2,10 +2,17 @@ from flask import Flask, jsonify, request, render_template
 import subprocess
 import happybase
 import sys
-from waitress import serve
 
 app = Flask(__name__)
-temp_port = 2001
+
+hbaseHost = sys.argv[1]
+
+# 추가 작업 영역 --------------
+
+
+
+# ------------ 추가작업 영역 끝
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -13,11 +20,12 @@ def index():
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
-    global connection
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
-    #http://ip:2001/create-table?table_name=테이블 이름&column_family_name=cf1
-    if 'table_name' in table_name:
+    #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
+    if 'table_name' in data:
         table_name = data['table_name']
     else :
         return "There is no table name(table_name)."
@@ -38,7 +46,10 @@ def create_table():
 
 @app.route('/table-list', methods=['GET'])
 def table_list():
-    global connection
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
+    
+    print(connection)
     table_list = connection.tables()
     print(table_list)
     
@@ -46,15 +57,27 @@ def table_list():
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
-    global connection
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
     data = request.args.to_dict()
-    #http://ip:2001/delete-table?table_name=테이블 이름
+    #http://ip:2000/delete-table?table_name=테이블 이름
+    if 'table_name' in data:
+        table_name = data['table_name']
+    else :
+        return "There is no table name(table_name)."
     
-    print('Deleting the {} table.'.format(table_name))
-    connection.delete_table(table_name)
+    table_list = connection.tables()
     
-    return 'Deleting the {} table.'.format(table_name)
+    table_name_encode = table_name.encode()
+
+    if table_name_encode in table_list:
+        connection.delete_table(table_name, disable=True)    
+        print('Deleting the {} table.'.format(table_name))
+        return 'Deleting the {} table.'.format(table_name)
+    else:
+        return 'There is no table name corresponding to hbase.'
+    return 'delete table'
 
 @app.route('/row-list', methods=['GET'])
 def row_list():
@@ -63,7 +86,7 @@ def row_list():
 
 # if __name__ == '__main__':
 
-#     listen_port = '2001'
+#     listen_port = '2000'
 
 #     ipaddr=subprocess.getoutput("hostname -I").split()[0]
 #     print ("Starting the service with ip_addr="+ipaddr)
@@ -71,14 +94,7 @@ def row_list():
 
 if __name__ == '__main__':
     # hbase 연결
-    global connection
-    hbaseHost = sys.argv[1]
-    
-    connection = happybase.Connection(host=hbaseHost, port=9090)
-    connection.open()
-   
-    serve(app, host="0.0.0.0", port=temp_port)
-#     listen_port = '2001'
-#     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
+    listen_port = '2000'
+    app.run(debug=True, port=int(listen_port), host='0.0.0.0')
     
     #command ex) python app.py test-hbase-master
