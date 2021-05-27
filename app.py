@@ -78,9 +78,8 @@ def delete_table():
 
 @app.route('/row-list', methods=['POST'])
 def row_list():
-    # post 로 전달 받은 json 정보를 python dict 형태로 data 에 저장
-    data = request.get_json()
-    print(request.form)
+    # post 로 전달 받은 정보를 python dict 형태로 data 에 저장
+    data = request.form.to_dict()
     print(data)
     
     consumer = KafkaConsumer('my-topic1',
