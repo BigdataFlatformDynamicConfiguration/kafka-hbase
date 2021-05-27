@@ -80,6 +80,7 @@ def delete_table():
 def row_list():
     # post 로 전달 받은 json 정보를 python dict 형태로 data 에 저장
     data = request.get_json()
+    print(data)
     
     consumer = KafkaConsumer('my-topic1',
                      bootstrap_servers=[ kafkaHost + ':9092'],
