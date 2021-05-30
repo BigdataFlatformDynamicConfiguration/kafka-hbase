@@ -146,7 +146,7 @@ def delete_table():
 @app.route('/row-list', methods=['POST'])
 def row_list():
     # post 로 전달 받은 정보를 python dict 형태로 data 에 저장
-    data = request.form.to_dict()
+    data = request.get_json()
     print(data)
     data = data['param1']
     print(data)
