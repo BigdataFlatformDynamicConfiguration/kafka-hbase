@@ -143,6 +143,7 @@ def row_list():
     # post 로 전달 받은 정보를 python dict 형태로 data 에 저장
     data = request.form.to_dict()
     print(data)
+    data = data['param1']
     
     tasks = [
         Consumer(kafkaHost, hbaseHost),
