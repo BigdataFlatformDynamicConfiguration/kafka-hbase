@@ -165,9 +165,7 @@ def row_list():
     for task in tasks:
         task.stop()
     print('after stop')    
-    for task in tasks:
-        task.join()
-    print('after join')
+    
     return "hello wolrd!"
 
 # if __name__ == '__main__':
