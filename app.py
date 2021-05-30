@@ -84,6 +84,7 @@ class Consumer(threading.Thread):
 #                         b.put(b'row-key-3', {b'cf:col3': b'value3', b'cf:col4': b'value4'})
                     b.send()
                 
+                break
                 if self.stop_event.is_set():
                     break
                     
