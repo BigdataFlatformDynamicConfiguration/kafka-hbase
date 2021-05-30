@@ -43,6 +43,9 @@ class Consumer(threading.Thread):
         
 #         consumer = KafkaConsumer('my-topic1',
 #                      bootstrap_servers=[ kafkaHost + ':9092'])
+
+        connection = happybase.Connection(host=hbaseHost, port=9090)
+        connection.open()
         
         while not self.stop_event.is_set():
             for message in consumer:
@@ -52,28 +55,25 @@ class Consumer(threading.Thread):
                                           message.offset, message.key,
                                           message.value))
                 
+                data = json.loads(message.value)
+                print(data)
+          
+                if 'table_name' in data:
+                    table_name = data['table_name']
+                else:
+                    table_name = 'my-topic11'
+            
+                table = connection.table(table_name)
+                
+                b = table.batch()
+                b.put(b'row-key-1', {b'cf:col1': b'value1', b'cf:col2': b'value2'})
+                b.put(b'row-key-2', {b'cf:col2': b'value2', b'cf:col3': b'value3'})
+                b.put(b'row-key-3', {b'cf:col3': b'value3', b'cf:col4': b'value4'})
+                b.send()
+                
                 if self.stop_event.is_set():
                     break
-        
-#         connection = happybase.Connection(host=hbaseHost, port=9090)
-#         connection.open()
-
-#         table = connection.table('my-topic11')
-        
-#         count = 0
-#         while not self.stop_event.is_set():
-#             for message in consumer:
-#                 count += 1
-#                 print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-#                                                   message.offset, message.key,
-#                                                   message.value))
-#                 table.put('row-key' + str(count), {'cf:col1': message.value})
-#                 if self.stop_event.is_set():
-#                     break
-
-#         for key, data in table.scan():
-#             print(key, data)
-            
+                    
         consumer.close()        
 
 @app.route('/', methods=['GET'])
@@ -159,10 +159,6 @@ def row_list():
     
     tasks[1].daemon = True
     tasks[1].start()
-    
-#     for t in tasks:
-#         t.daemon = True
-#         t.start()
 
     print('after start')    
     time.sleep(2)
