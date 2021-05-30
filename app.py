@@ -199,7 +199,7 @@ def scan():
         result[key.decode('ascii')] = data
     return json.dumps(result)
 
-@app.route('/row-list', methods=['POST'])
+@app.route('put-rows', methods=['POST'])
 def row_list():
     # post 로 전달 받은 정보를 python dict 형태로 data 에 저장
     data = request.get_json()
