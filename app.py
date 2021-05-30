@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
+table_row_cnt = dict()
 
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
@@ -62,14 +63,25 @@ class Consumer(threading.Thread):
                     table_name = data['table_name']
                 else:
                     table_name = 'my-topic11'
-            
+                
+                if table_name not in table_row_cnt:
+                    table_row_cnt[table_name] = 0
+                    
                 table = connection.table(table_name)
                 
-                b = table.batch()
-                b.put(b'row-key-1', {b'cf:col1': b'value1', b'cf:col2': b'value2'})
-                b.put(b'row-key-2', {b'cf:col2': b'value2', b'cf:col3': b'value3'})
-                b.put(b'row-key-3', {b'cf:col3': b'value3', b'cf:col4': b'value4'})
-                b.send()
+                
+                if 'table_name' in data:  
+                    b = table.batch()
+                    
+                    data_list = data['data']
+                    print(data_list)
+                    for i in data_list:  
+                        table_row_cnt[table_name] = table_row_cnt[table_name] + 1
+                        b.put('row-key-' + str(table_row_cnt[table_name]), i)
+#                         b.put(b'row-key-1', {b'cf:col1': b'value1', b'cf:col2': b'value2'})
+#                         b.put(b'row-key-2', {b'cf:col2': b'value2', b'cf:col3': b'value3'})
+#                         b.put(b'row-key-3', {b'cf:col3': b'value3', b'cf:col4': b'value4'})
+                    b.send()
                 
                 if self.stop_event.is_set():
                     break
