@@ -104,7 +104,7 @@ def scan():
     
     for key, data in res:
         print (key, data)
-    return 'hello scan'
+    return str(res)
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
