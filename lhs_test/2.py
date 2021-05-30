@@ -105,7 +105,7 @@ def scan():
     result = []
     for key, data in res:
         result.append(data)
-    return json.dumps(result)
+    return jsonify(result)
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
