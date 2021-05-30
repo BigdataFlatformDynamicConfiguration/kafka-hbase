@@ -14,7 +14,7 @@ hbaseHost = sys.argv[2]
 
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
-        self.data = data.encode()
+        self.data = data
         print(data)
         print(self.data)
         threading.Thread.__init__(self)
@@ -24,9 +24,9 @@ class Producer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-#         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
-#                      value_serializer=lambda m: json.dumps(m).encode('ascii'))
-        producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
+        producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
+                     value_serializer=lambda m: json.dumps(m).encode('ascii'))
+#         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
         producer.send('my-topic1', self.data)
         producer.close()
  
@@ -39,12 +39,12 @@ class Consumer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-#         consumer = KafkaConsumer('my-topic1',
-#                      bootstrap_servers=[ kafkaHost + ':9092'],
-#                      value_deserializer=lambda m: json.loads(m.decode('ascii')))
-        
         consumer = KafkaConsumer('my-topic1',
-                     bootstrap_servers=[ kafkaHost + ':9092'])
+                     bootstrap_servers=[ kafkaHost + ':9092'],
+                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
+        
+#         consumer = KafkaConsumer('my-topic1',
+#                      bootstrap_servers=[ kafkaHost + ':9092'])
         
         while not self.stop_event.is_set():
             for message in consumer:
