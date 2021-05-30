@@ -74,7 +74,7 @@ def index():
 
 @app.route('/scan', methods=['POST'])
 def scan():
-    data = request.form.to_dict()
+    data = request.get_json()
     print(data)
     return 'hello scan'
 
