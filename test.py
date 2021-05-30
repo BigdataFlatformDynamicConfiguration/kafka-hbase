@@ -6,3 +6,4 @@ data = {'param1': 'value1', 'param2': 'value'}
 
 # res = requests.post(URL, data=json.dumps(data))
 res = requests.post(URL, json=data)
+print(res.text)
