@@ -14,7 +14,7 @@ hbaseHost = sys.argv[2]
 
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
-        self.data = data
+        self.data = data.encode()
         print(data)
         print(self.data)
         threading.Thread.__init__(self)
