@@ -53,6 +53,9 @@ class Consumer(threading.Thread):
                 print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
                                           message.offset, message.key,
                                           message.value))
+                
+                if self.stop_event.is_set():
+                    break
         
 #         connection = happybase.Connection(host=hbaseHost, port=9090)
 #         connection.open()
