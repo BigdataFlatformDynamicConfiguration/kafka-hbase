@@ -15,8 +15,6 @@ hbaseHost = sys.argv[2]
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
         self.data = data
-        print(data)
-        print(self.data)
         threading.Thread.__init__(self)
         self.stop_event = threading.Event()
         
@@ -158,7 +156,7 @@ def row_list():
         t.daemon = True
         t.start()
     print('after start')    
-    time.sleep(2)
+    time.sleep(5)
     print('after sleep')    
     for task in tasks:
         task.stop()
