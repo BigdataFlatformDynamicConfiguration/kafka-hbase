@@ -102,9 +102,10 @@ def scan():
             else:
                 res = table.scan()
     
+    result = []
     for key, data in res:
-        print (key, data)
-    return str(res)
+        result.append(data)
+    return str(result)
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
