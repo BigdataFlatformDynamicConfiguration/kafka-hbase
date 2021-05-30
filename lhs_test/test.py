@@ -142,7 +142,7 @@ def table_list():
     table_list = connection.tables()
     print(table_list)
     
-    return str(table_list)
+    return json.dumps(table_list)
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
