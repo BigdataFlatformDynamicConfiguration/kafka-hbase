@@ -104,9 +104,7 @@ def scan():
     
     result = {}
     for key, data in res:
-        print (key)
-        print (data)
-        result[key] = data
+        result[key.decode('ascii')] = data.decode('ascii')
     return json.dumps(result)
 
 @app.route('/create-table', methods=['GET'])
