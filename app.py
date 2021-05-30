@@ -144,6 +144,7 @@ def row_list():
     data = request.form.to_dict()
     print(data)
     data = data['param1']
+    print(data)
     
     tasks = [
         Consumer(kafkaHost, hbaseHost),
