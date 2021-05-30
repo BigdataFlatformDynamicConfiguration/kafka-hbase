@@ -103,10 +103,8 @@ def scan():
                 res = table.scan()
     
     result = {}
-    idx = 0
     for key, data in res:
-        result[idx] = data
-        idx += 1
+        result[key] = data
     return json.dumps(result)
 
 @app.route('/create-table', methods=['GET'])
