@@ -155,7 +155,7 @@ def row_list():
     tasks[0].daemon = True
     tasks[0].start()
     
-    time.sleep(2)
+    time.sleep(1)
     
     tasks[1].daemon = True
     tasks[1].start()
