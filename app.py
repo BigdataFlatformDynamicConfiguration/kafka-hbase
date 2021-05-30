@@ -134,11 +134,12 @@ def table_list():
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
     
-    print(connection)
     table_list = connection.tables()
-    print(table_list)
     
-    return str(table_list)
+    for table in table_list:
+        table = table.decode('ascii')
+
+    return json.dumps(table_list)
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
@@ -163,6 +164,42 @@ def delete_table():
     else:
         return 'There is no table name corresponding to hbase.'
     return 'delete table'
+
+@app.route('/scan', methods=['POST'])
+def scan():
+    data = request.get_json()
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
+    table = connection.table(data['table'])
+    
+    if 'row_start' in data:
+        if 'row_stop' in data:
+            if 'filter' in data:
+                res = table.scan(row_start=data['row_start'], row_stop=data['row_stop'], filter = data['filter'] )
+            else:
+                res = table.scan(row_start=data['row_start'], row_stop=data['row_stop'])
+        else:
+            if 'filter' in data:
+                res = table.scan(row_start=data['row_start'], filter = data['filter'] )
+            else:
+                res = table.scan(row_start=data['row_start'])
+    else:
+        if 'row_stop' in data:
+            if 'filter' in data:
+                res = table.scan(row_stop=data['row_stop'], filter = data['filter'] )
+            else:
+                res = table.scan(row_stop=data['row_stop'])
+        else:
+            if 'filter' in data:
+                res = table.scan(row_stop=data['row_stop'])
+            else:
+                res = table.scan()
+    
+    result = {}
+    for key, data in res:
+        data = {y.decode('ascii'):data.get(y).decode('ascii') for y in data.keys()}
+        result[key.decode('ascii')] = data
+    return json.dumps(result)
 
 @app.route('/row-list', methods=['POST'])
 def row_list():
