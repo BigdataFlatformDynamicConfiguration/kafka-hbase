@@ -136,10 +136,11 @@ def table_list():
     
     table_list = connection.tables()
     
+    result = []
     for table in table_list:
-        table = table.decode('ascii')
+        result.append(table.decode('ascii'))
 
-    return json.dumps(table_list)
+    return json.dumps(result)
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
