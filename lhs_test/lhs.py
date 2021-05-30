@@ -76,6 +76,7 @@ def index():
 def scan():
     data = request.form.to_dict()
     print(data)
+    return data
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
