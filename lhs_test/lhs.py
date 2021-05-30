@@ -75,7 +75,34 @@ def index():
 @app.route('/scan', methods=['POST'])
 def scan():
     data = request.get_json()
-    print(data)
+    connection = happybase.Connection(host=hbaseHost, port=9090)
+    connection.open()
+    table = connection.table(data['table'])
+    
+    if 'row_start' in data
+        if 'row_stop' in data
+            if 'filter' in data
+                res = table.scan(row_start=data['row_start'], row_stop=data['row_stop'], filter = data['filter'] )
+            else
+                res = table.scan(row_start=data['row_start'], row_stop=data['row_stop'])
+        else
+            if 'filter' in data
+                res = table.scan(row_start=data['row_start'], filter = data['filter'] )
+            else
+                res = table.scan(row_start=data['row_start'])
+    else
+        if 'row_stop' in data
+            if 'filter' in data
+                res = table.scan(row_stop=data['row_stop'], filter = data['filter'] )
+            else
+                res = table.scan(row_stop=data['row_stop'])
+        else
+            if 'filter' in data
+                res = table.scan(row_stop=data['row_stop'])
+            else
+                res = table.scan()
+    
+    print(res);
     return 'hello scan'
 
 @app.route('/create-table', methods=['GET'])
