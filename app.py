@@ -152,11 +152,20 @@ def row_list():
         Producer(kafkaHost, data)
     ]
     print('before start')
-    for t in tasks:
-        t.daemon = True
-        t.start()
+    tasks[0].daemon = True
+    tasks[0].start()
+    
+    time.sleep(2)
+    
+    tasks[1].daemon = True
+    tasks[1].start()
+    
+#     for t in tasks:
+#         t.daemon = True
+#         t.start()
+
     print('after start')    
-    time.sleep(5)
+    time.sleep(2)
     print('after sleep')    
     for task in tasks:
         task.stop()
