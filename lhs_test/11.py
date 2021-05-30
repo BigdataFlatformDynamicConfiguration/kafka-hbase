@@ -139,10 +139,11 @@ def table_list():
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
     
-    print(connection)
     table_list = connection.tables()
-    print(table_list)
     
+    for table in table_list
+        table = table.decode('ascii')
+
     return str(table_list)
 
 @app.route('/delete-table', methods=['GET'])
