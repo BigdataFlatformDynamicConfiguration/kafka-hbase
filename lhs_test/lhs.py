@@ -72,6 +72,11 @@ class Consumer(threading.Thread):
 def index():
     return "hello wolrd!"
 
+@app.route('/scan', methods=['POST'])
+def scan():
+    data = request.form.to_dict()
+    print(data)
+
 @app.route('/create-table', methods=['GET'])
 def create_table():
     connection = happybase.Connection(host=hbaseHost, port=9090)
@@ -168,7 +173,7 @@ def row_list():
 
 if __name__ == '__main__':
     # hbase 연결
-    listen_port = '2000'
+    listen_port = '2001'
     app.run(debug=True, port=int(listen_port), host='0.0.0.0')
     
     #command ex) python app.py test-hbase-master
