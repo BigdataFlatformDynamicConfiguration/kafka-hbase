@@ -103,12 +103,12 @@ class Consumer(threading.Thread):
 def index():
     return "hello wolrd!"
 
-@app.route('/create-table', methods=['GET'])
+@app.route('/create-table', methods=['POST'])
 def create_table():
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
     # get 으로 받은 쿼리 인자를 dict 형식으로 받아 data 에 저장
-    data = request.args.to_dict()
+    data = request.get_json()
     #http://ip:2000/create-table?table_name=테이블 이름&column_family_name=cf1
     if 'table_name' in data:
         table_name = data['table_name']
