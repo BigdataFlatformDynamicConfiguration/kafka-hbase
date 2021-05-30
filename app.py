@@ -12,6 +12,7 @@ app = Flask(__name__)
 kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
 table_row_cnt = dict()
+kafka_offset = dict()
 
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
@@ -56,6 +57,14 @@ class Consumer(threading.Thread):
                                           message.offset, message.key,
                                           message.value))
                 
+                if message.topic in kafka_offset:
+                    if kafka_offset[message.topic] == message.offset:
+                        print('continue')
+                        continue
+                else: 
+                    kafka_offset[message.topic] = message.offset
+                    
+                kafka_offset[message.topic] = message.offset
                 data = json.loads(str(message.value).replace("\'", "\""))
                 print(data)
           
