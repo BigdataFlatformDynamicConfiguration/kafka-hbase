@@ -102,7 +102,9 @@ def scan():
             else:
                 res = table.scan()
     
-    print(json.dumps({data:res}))
+    print(json.dumps({
+        'data':res
+    }))
     return 'hello scan'
 
 @app.route('/create-table', methods=['GET'])
