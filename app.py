@@ -22,8 +22,9 @@ class Producer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-        producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
-                     value_serializer=lambda m: json.dumps(m).encode('ascii'))
+#         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
+#                      value_serializer=lambda m: json.dumps(m).encode('ascii'))
+        producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
         producer.send('my-topic1', self.data)
         producer.close()
  
@@ -36,9 +37,13 @@ class Consumer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
+#         consumer = KafkaConsumer('my-topic1',
+#                      bootstrap_servers=[ kafkaHost + ':9092'],
+#                      value_deserializer=lambda m: json.loads(m.decode('ascii')))
+        
         consumer = KafkaConsumer('my-topic1',
-                     bootstrap_servers=[ kafkaHost + ':9092'],
-                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
+                     bootstrap_servers=[ kafkaHost + ':9092'])
+        
         while not self.stop_event.is_set():
             for message in consumer:
                 # message value and key are raw bytes -- decode if necessary!
