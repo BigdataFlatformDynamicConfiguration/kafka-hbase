@@ -104,6 +104,8 @@ def scan():
     
     result = {}
     for key, data in res:
+        print key
+        print data
         result[key] = data
     return json.dumps(result)
 
