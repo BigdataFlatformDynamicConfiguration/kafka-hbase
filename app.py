@@ -56,7 +56,7 @@ class Consumer(threading.Thread):
                                           message.offset, message.key,
                                           message.value))
                 
-                data = json.loads(message.value)
+                data = json.loads(str(message.value))
                 print(data)
           
                 if 'table_name' in data:
