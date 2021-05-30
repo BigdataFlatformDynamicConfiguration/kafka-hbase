@@ -79,27 +79,27 @@ def scan():
     connection.open()
     table = connection.table(data['table'])
     
-    if 'row_start' in data
-        if 'row_stop' in data
-            if 'filter' in data
+    if 'row_start' in data:
+        if 'row_stop' in data:
+            if 'filter' in data:
                 res = table.scan(row_start=data['row_start'], row_stop=data['row_stop'], filter = data['filter'] )
-            else
+            else:
                 res = table.scan(row_start=data['row_start'], row_stop=data['row_stop'])
-        else
-            if 'filter' in data
+        else:
+            if 'filter' in data:
                 res = table.scan(row_start=data['row_start'], filter = data['filter'] )
-            else
+            else:
                 res = table.scan(row_start=data['row_start'])
-    else
-        if 'row_stop' in data
-            if 'filter' in data
+    else:
+        if 'row_stop' in data:
+            if 'filter' in data:
                 res = table.scan(row_stop=data['row_stop'], filter = data['filter'] )
-            else
+            else:
                 res = table.scan(row_stop=data['row_stop'])
-        else
-            if 'filter' in data
+        else:
+            if 'filter' in data:
                 res = table.scan(row_stop=data['row_stop'])
-            else
+            else:
                 res = table.scan()
     
     print(res);
