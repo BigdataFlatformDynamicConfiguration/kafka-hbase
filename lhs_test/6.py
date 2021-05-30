@@ -102,10 +102,12 @@ def scan():
             else:
                 res = table.scan()
     
-    result = []
+    result = {}
+    idx = 0
     for key, data in res:
-        result.append(data)
-    return json.dumps({'result':[result]})
+        result[idx] = data
+        idx += 1
+    return json.dumps(result)
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
