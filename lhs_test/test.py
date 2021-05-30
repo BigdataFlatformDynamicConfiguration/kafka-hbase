@@ -105,7 +105,7 @@ def scan():
     result = []
     for key, data in res:
         result.append(data)
-    return str(result)
+    return json.dumps(result)
 
 @app.route('/create-table', methods=['GET'])
 def create_table():
@@ -142,7 +142,7 @@ def table_list():
     table_list = connection.tables()
     print(table_list)
     
-    return json.dumps(table_list)
+    return str(table_list)
 
 @app.route('/delete-table', methods=['GET'])
 def delete_table():
