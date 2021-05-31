@@ -8,7 +8,6 @@ import sys
 import json
 
 app = Flask(__name__)
-
 kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
 table_row_cnt = dict()
