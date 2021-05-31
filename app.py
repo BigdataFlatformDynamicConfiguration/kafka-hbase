@@ -1,4 +1,19 @@
+from flask import Flask, jsonify, request, render_template
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
+import threading, logging, time
+import subprocess
+import happybase
+import sys
+import json
 
+app = Flask(__name__)
+kafkaHost = sys.argv[1]
+hbaseHost = sys.argv[2]
+table_row_cnt = dict()
+kafka_offset = dict()
+
+class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
         self.data = data
         threading.Thread.__init__(self)
