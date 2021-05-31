@@ -189,7 +189,7 @@ def scan():
                 res = table.scan(row_stop=data['row_stop'])
         else:
             if 'filter' in data:
-                res = table.scan(row_stop=data['filter'])
+                res = table.scan(filter=data['filter'])
             else:
                 res = table.scan()
     
