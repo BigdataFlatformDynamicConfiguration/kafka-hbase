@@ -135,7 +135,7 @@ def table_list():
     
     result = []
     for table in table_list:
-        result.append(table.decode('ascii'))
+        result.append(table.decode('utf-8'))
 
     return json.dumps(result)
 
