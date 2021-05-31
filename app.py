@@ -195,9 +195,8 @@ def scan():
     
     result = {}
     for key, data in res:
-        result[key] = data
-        #data = {y.decode('ascii'):data.get(y).decode('ascii') for y in data.keys()}
-        #result[key.decode('ascii')] = data
+        data = {y.decode('utf-8'):data.get(y).decode('utf-8') for y in data.keys()}
+        result[key.decode('utf-8')] = data
     return json.dumps(result)
 
 @app.route('/put-rows', methods=['POST'])
