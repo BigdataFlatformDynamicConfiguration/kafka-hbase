@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
+topicName = sys.argv[3]
 table_row_cnt = dict()
 kafka_offset = dict()
 
@@ -27,7 +28,7 @@ class Producer(threading.Thread):
         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
                      value_serializer=lambda m: json.dumps(m).encode('ascii'))
 #         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
-        producer.send('my-topic1', self.data)
+        producer.send(topicName, self.data)
         producer.close()
  
 class Consumer(threading.Thread):
@@ -39,9 +40,9 @@ class Consumer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-        consumer = KafkaConsumer('my-topic1',
+        consumer = KafkaConsumer(topicName,
                      bootstrap_servers=[ kafkaHost + ':9092'],
-                     value_deserializer=lambda m: json.loads(m.decode('ascii')))
+                     value_deserializer=lambda m: json.loads(m.decode('utf-8')))
         
 #         consumer = KafkaConsumer('my-topic1',
 #                      bootstrap_servers=[ kafkaHost + ':9092'])
@@ -71,7 +72,7 @@ class Consumer(threading.Thread):
                 if 'table_name' in data:
                     table_name = data['table_name']
                 else:
-                    table_name = 'my-topic11'
+                    table_name = topicName
                 
                 if table_name not in table_row_cnt:
                     table_row_cnt[table_name] = 0
