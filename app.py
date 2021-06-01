@@ -53,20 +53,20 @@ class Consumer(threading.Thread):
             for message in consumer:
                 # message value and key are raw bytes -- decode if necessary!
                 # e.g., for unicode: `message.value.decode('utf-8')`
-                print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-                                          message.offset, message.key,
-                                          message.value))
+#                 print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+#                                           message.offset, message.key,
+#                                           message.value))
                 
                 if message.topic in kafka_offset:
                     if kafka_offset[message.topic] == message.offset:
-                        print('continue')
+#                         print('continue')
                         continue
                 else: 
                     kafka_offset[message.topic] = message.offset
                     
                 kafka_offset[message.topic] = message.offset
                 data = json.loads(str(message.value).replace("\'", "\""))
-                print(data)
+#                 print(data)
           
                 if 'table_name' in data:
                     table_name = data['table_name']
@@ -83,7 +83,7 @@ class Consumer(threading.Thread):
                     b = table.batch()
                     
                     data_list = data['data']
-                    print(data_list)
+#                     print(data_list)
                     for i in data_list:  
                         table_row_cnt[table_name] = table_row_cnt[table_name] + 1
                         b.put('row-key-' + str(table_row_cnt[table_name]), i)
@@ -203,7 +203,7 @@ def scan():
 def row_list():
     # post 로 전달 받은 정보를 python dict 형태로 data 에 저장
     data = request.get_json()
-    print(data)
+#     print(data)
     
     tasks = [
         Consumer(kafkaHost, hbaseHost),
