@@ -102,7 +102,7 @@ class Consumer(threading.Thread):
 
 @app.route('/', methods=['GET'])
 def index():
-    return "hello wolrd!"
+    return topicName
 
 @app.route('/create-table', methods=['POST'])
 def create_table():
@@ -226,7 +226,7 @@ def row_list():
         task.stop()
     print('after stop')    
     
-    return "hello wolrd!"
+    return topicName
 
 # if __name__ == '__main__':
 
