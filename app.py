@@ -26,7 +26,7 @@ class Producer(threading.Thread):
 
     def run(self):
         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092',
-                     value_serializer=lambda m: json.dumps(m).encode('ascii'))
+                     value_serializer=lambda m: json.dumps(m).encode('utf-8'))
 #         producer = KafkaProducer(bootstrap_servers= kafkaHost + ':9092')
         producer.send(topicName, self.data)
         producer.close()
