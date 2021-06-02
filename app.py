@@ -6,14 +6,17 @@ import subprocess
 import happybase
 import sys
 import json
+import socket 
 
 app = Flask(__name__)
 
 kafkaHost = sys.argv[1]
 hbaseHost = sys.argv[2]
-topicName = sys.argv[3]
+topicName = socket.gethostbyname(socket.gethostname())
 table_row_cnt = dict()
 kafka_offset = dict()
+
+print(topicName);
 
 class Producer(threading.Thread):
     def __init__(self, kafkaHost, data):
