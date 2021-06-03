@@ -91,7 +91,7 @@ class Consumer(threading.Thread):
                     for i in data_list:  
 #                         table_row_cnt[table_name] = table_row_cnt[table_name] + 1
                         b.put(i['key'], i['data'])
-                        print(i['key'],' , ', i['data'])
+                        print(i)
 #                         b.put(b'row-key-1', {b'cf:col1': b'value1', b'cf:col2': b'value2'})
 #                         b.put(b'row-key-2', {b'cf:col2': b'value2', b'cf:col3': b'value3'})
 #                         b.put(b'row-key-3', {b'cf:col3': b'value3', b'cf:col4': b'value4'})
