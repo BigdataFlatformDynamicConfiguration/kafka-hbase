@@ -86,11 +86,11 @@ class Consumer(threading.Thread):
                 if 'table_name' in data:  
                     b = table.batch()
                     
-                    data_list = data['data']
+                    data_list = data['datalist']
 #                     print(data_list)
                     for i in data_list:  
 #                         table_row_cnt[table_name] = table_row_cnt[table_name] + 1
-                        b.put(i['key'], i['data'])
+                        b.put(i['rowkey'], i['data'])
                         print(i)
 #                         b.put(b'row-key-1', {b'cf:col1': b'value1', b'cf:col2': b'value2'})
 #                         b.put(b'row-key-2', {b'cf:col2': b'value2', b'cf:col3': b'value3'})
