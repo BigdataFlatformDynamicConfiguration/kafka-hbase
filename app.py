@@ -107,7 +107,7 @@ class Consumer(threading.Thread):
 def index():
     return topicName
 
-@app.route('/create-table', methods=['POST'])
+@app.route('/create-table', methods=['GET'])
 def create_table():
     connection = happybase.Connection(host=hbaseHost, port=9090)
     connection.open()
