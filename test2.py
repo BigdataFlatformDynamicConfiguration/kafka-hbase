@@ -1,7 +1,7 @@
 import requests
 import json
 
-URL = 'http://34.64.94.147:2000/row-list'
+URL = 'http://34.64.120.158:2000/put-row'
 # data = {'param1': 'value1', 'param2': 'value'} 
 
 # data = {"table_name" : "my-topic11", "data" : [{"cf1:col1" : "5","cf1:col2" : "6",},{"cf1:col1" : "7","cf1:col2" : "8",}]}
