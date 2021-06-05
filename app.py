@@ -123,10 +123,10 @@ def create_table():
         column_family_name = data['column_family_name']
     else:
         column_family_name = {'cf1':{}}
-        
+
+    connection.create_table(table_name,column_family_name)        
     print('Creating the {} table.'.format(table_name))
 
-    connection.create_table(table_name,column_family_name)
     return 'Creating the {} table.'.format(table_name)
 
 @app.route('/table-list', methods=['GET'])
