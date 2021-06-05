@@ -126,8 +126,7 @@ def create_table():
         
     print('Creating the {} table.'.format(table_name))
 
-    connection.create_table(
-    table_name,column_family_name)
+    connection.create_table(table_name,column_family_name)
     return 'Creating the {} table.'.format(table_name)
 
 @app.route('/table-list', methods=['GET'])
