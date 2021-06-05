@@ -223,7 +223,7 @@ def row_list():
     tasks[1].start()
 
     print('after start')    
-    time.sleep(2)
+    time.sleep(3)
     print('after sleep')    
     for task in tasks:
         task.stop()
