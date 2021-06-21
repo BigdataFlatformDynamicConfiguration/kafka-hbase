@@ -49,7 +49,7 @@
     	table_name : 'table_name',
     	datalist : [
     		{rowkey: '1',{'cf1:col1': '1', 'cf1:col2': '2'}},
-        {rowkey: '2',{'cf1:col1': '3', 'cf1:col2': '4'}},
+            {rowkey: '2',{'cf1:col1': '3', 'cf1:col2': '4'}},
     			. . . 
     	],
     }
