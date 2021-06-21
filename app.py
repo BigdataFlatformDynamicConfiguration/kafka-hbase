@@ -46,55 +46,34 @@ class Consumer(threading.Thread):
         consumer = KafkaConsumer(topicName,
                      bootstrap_servers=[ kafkaHost + ':9092'],
                      value_deserializer=lambda m: json.loads(m.decode('utf-8')))
-        
-#         consumer = KafkaConsumer('my-topic1',
-#                      bootstrap_servers=[ kafkaHost + ':9092'])
 
         connection = happybase.Connection(host=hbaseHost, port=9090)
         connection.open()
         
         while not self.stop_event.is_set():
             for message in consumer:
-                # message value and key are raw bytes -- decode if necessary!
-                # e.g., for unicode: `message.value.decode('utf-8')`
-#                 print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-#                                           message.offset, message.key,
-#                                           message.value))
-                
                 if message.topic in kafka_offset:
                     if kafka_offset[message.topic] == message.offset:
-#                         print('continue')
                         continue
                 else: 
                     kafka_offset[message.topic] = message.offset
                     
                 kafka_offset[message.topic] = message.offset
                 data = json.loads(str(message.value).replace("\'", "\""))
-#                 print(data)
           
                 if 'table_name' in data:
                     table_name = data['table_name']
                 else:
                     table_name = topicName
-                
-#                 if table_name not in table_row_cnt:
-#                     table_row_cnt[table_name] = 0
                     
                 table = connection.table(table_name)
-                
                 
                 if 'table_name' in data:  
                     b = table.batch()
                     
                     data_list = data['datalist']
-#                     print(data_list)
                     for i in data_list:  
-#                         table_row_cnt[table_name] = table_row_cnt[table_name] + 1
                         b.put(i['rowkey'], i['data'])
-#                        print(i)
-#                         b.put(b'row-key-1', {b'cf:col1': b'value1', b'cf:col2': b'value2'})
-#                         b.put(b'row-key-2', {b'cf:col2': b'value2', b'cf:col3': b'value3'})
-#                         b.put(b'row-key-3', {b'cf:col3': b'value3', b'cf:col4': b'value4'})
                     b.send()
                 
                 break
